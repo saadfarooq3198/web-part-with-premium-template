@@ -9,8 +9,61 @@
                     <div class="nk-block nk-block-lg">
                         <div class="nk-block-head">
                             <div class="nk-block-head-content">
+                                <div class="nk-block-head nk-block-head-sm">
+                                    <div class="nk-block-between">
+                                        <div class="nk-block-head-content">
+                                            <h3 class="nk-block-title page-title">Users</h3>
+                                            <div class="nk-block-des text-soft">
+                                                <span style="display: none"> {{ $count = 0 }}</span>
+                                                @foreach ($users as $item)
+                                                    <span style="display: none"> {{ $count++ }}</span>
+                                                @endforeach
+                                                <p>You have total {{ $count }} users.</p>
+                                            </div>
+                                        </div><!-- .nk-block-head-content -->
+                                        <div class="nk-block-head-content">
+                                            <div class="toggle-wrap nk-block-tools-toggle">
+                                                <a href="#" class="btn btn-icon btn-trigger toggle-expand mr-n1"
+                                                    data-target="pageMenu"><em class="icon ni ni-menu-alt-r"></em></a>
+                                                <div class="toggle-expand-content" data-content="pageMenu">
+                                                    <ul class="nk-block-tools g-3">
+                                                        <li>
+                                                            {{-- <div class="drodown" style="border: 1px solid red">
+                                                                <a href="#"
+                                                                    class="dropdown-toggle btn btn-white btn-dim btn-outline-light"
+                                                                    data-toggle="dropdown" aria-expanded="false"><em
+                                                                        class="d-none d-sm-inline icon ni ni-filter-alt"></em><span>Filter
+                                                                        By Status</span><em
+                                                                        class="dd-indc icon ni ni-chevron-right"></em></a>
+                                                                <div class="dropdown-menu dropdown-menu-right" style="">
+                                                                    <ul class="link-list-opt no-bdr">
+                                                                        <li><a at="active"><span   class="status">Active</span></a></li>
+                                                                        <li><a><span   class="status">Pending</span></a></li>
+                                                                        <li><a><span   class="status">Suspended</span></a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div> --}}
+                                                            <div class="form-group">
+                                                                <select id='status' class="form-control" style="width: 200px">
+                                                                    <option value="">Status</option>
+                                                                    <option value="Active">Active</option>
+                                                                    <option value="Pending">Pending</option>
+                                                                    <option value="Suspended">Suspended</option>
+                                                                </select>
+                                                            </div>
+                                                        </li>
+                                                        <li class="nk-block-tools-opt"><button class="btn btn-primary"
+                                                                data-toggle="modal" data-target="#add-user-modal"><em
+                                                                    class="icon ni ni-plus"></em><span>Add
+                                                                    Project</span></button></li>
+                                                    </ul>
+                                                </div>
+                                            </div><!-- .toggle-wrap -->
+                                        </div><!-- .nk-block-head-content -->
+                                    </div><!-- .nk-block-between -->
+                                </div>
                                 {{-- @can('add_user') --}}
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#add-user-modal">Add User</button>
+                                {{-- <button class="btn btn-primary" data-toggle="modal" data-target="#add-user-modal">Add User</button> --}}
                                 {{-- @endcan --}}
                             </div>
                         </div>
@@ -21,8 +74,8 @@
                                         <tr>
                                             <th>First Name</th>
                                             <th>Last Name</th>
-                                            <th>Username</th>
                                             <th>Email</th>
+                                            <th>Status</th>
                                             <th>Image</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
@@ -166,6 +219,7 @@
 <!-- content @e -->
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script> --}}
 <script>
 $(document).ready(function(){
     // Fetch data using datatable start
@@ -173,42 +227,51 @@ $(document).ready(function(){
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ url('get_user') }}",
+        ajax:{
+           url: "{{ url('get_user') }}",
+           data: function (d) {
+                d.status = $('#status').val()
+            }
+        },
+
         columns: [
             {data: 'first_name', name: 'first_name'},
             {data: 'last_name', name: 'last_name'},
-            {data: 'last_name', name: 'last_name'},
             {data: 'email', name: 'email'},
+            {data: 'status', name: 'status'},
             {data: 'image', name: 'image'},
             {data: 'edit', name: 'edit',orderable: false,searchable: false},
             {data: 'delete', name: 'delete',orderable: false,searchable: false},
         ]
     });
-    
+    $('#status').change(function(){
+        table.draw();
+    });
   });
         // datatable fetch end
+
        // Fetch records using ajax
-        fetch_users();
-        function fetch_users() {
-            $.ajax({
-                url: 'get_users',
-                type: "GET",
-                success: function(response) {
-                    $('tbody').html('');
-                    $.each(response.users, function(key, item) {
-                        $('tbody').append('<tr>\
-                <td>' + item.first_name + '</td>\
-                <td>' + item.last_name + '</td>\
-                <td>'+ item.first_name +' '+ item.last_name + '</td>\
-                <td>' + item.email + '</td>\
-                <td><img src="images/' + item.image + ' " alt="no image" width="100px" height="100px"/></td>\
-                <td>@can('update_user')<button value="' + item.id + '" class="btn-edit btn btn-primary btn-sm">Edit</button>@endcan</td>\
-                <td>@can('delete_user')<button  value="' + item.id + '" class="delete-btn btn-delete btn btn-danger btn-sm">Delete</button>@endcan</td>\
-              </tr>');
-                });
-                }
-            });
-        }
+        // fetch_users();
+        // function fetch_users() {
+        //     $.ajax({
+        //         url: 'get_users',
+        //         type: "GET",
+        //         success: function(response) {
+        //             $('tbody').html('');
+        //             $.each(response.users, function(key, item) {
+        //                 $('tbody').append('<tr>\
+        //         <td>' + item.first_name + '</td>\
+        //         <td>' + item.last_name + '</td>\
+        //         <td>'+ item.first_name +' '+ item.last_name + '</td>\
+        //         <td>' + item.email + '</td>\
+        //         <td><img src="images/' + item.image + ' " alt="no image" width="100px" height="100px"/></td>\
+        //         <td>@can('update_user')<button value="' + item.id + '" class="btn-edit btn btn-primary btn-sm">Edit</button>@endcan</td>\
+        //         <td>@can('delete_user')<button  value="' + item.id + '" class="delete-btn btn-delete btn btn-danger btn-sm">Delete</button>@endcan</td>\
+        //       </tr>');
+        //         });
+        //         }
+        //     });
+        // }
         // fetch End
     // adding new users using ajax
     $('#add-user-form').on('submit', function(e) {

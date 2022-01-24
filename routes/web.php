@@ -16,8 +16,8 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return view('user');
-});
+    return view('dashboard');
+})->middleware(['auth']);
 Route::get('get_user', [UserController::class,'get_user']);
 Route::get('get_users', [UserController::class,'get_users']);
 Route::put('update_loggedin_user',[UserController::class,'update_loggedin_user']);

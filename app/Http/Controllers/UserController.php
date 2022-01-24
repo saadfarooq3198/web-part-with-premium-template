@@ -27,7 +27,7 @@ class UserController extends Controller
     }
     public function index()
     {
-        $users = User::all();
+        $users = User::latest()->get();
         return view('user',compact('users',$users));
     }
 
@@ -35,9 +35,29 @@ class UserController extends Controller
     public function get_user(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::all();
+            if ($request->status == 'Active' || $request->status == 'Pending' || $request->status == 'Suspended') {
+                $data= User::where('status', $request->status);
+            }
+            else{
+                $data = User::latest()->get();
+            }
+           
             return DataTables::of($data)
                     ->addIndexColumn()
+                    // start
+                    ->addColumn('status', function($row){
+                        if($row->status=='Active'){
+                           return '<td class="nk-tb-col tb-col-md"><span class="tb-status text-success">Active</span></td>';
+                        }
+                        elseif($row->status=='Pending'){
+                            return '<td class="nk-tb-col tb-col-md"><span class="tb-status text-warning">Pending</span></td>';
+                         }
+                        else{
+                           return ' <td class="nk-tb-col tb-col-md"><span class="tb-status text-danger">Suspended</span></td>';
+                        }
+                   })
+                    // end
+   
                     ->addColumn('edit', function($row){
                         $edit = '<td><button value="'.$row->id.'" class="btn-edit btn btn-primary btn-sm">Edit</button></td>
                         ';
@@ -49,11 +69,11 @@ class UserController extends Controller
                      })->addColumn('image', function($row){
                         $image = '<img src="images/'.$row->image.'"  alt="no image" width="100px" height="100px"/>';
                         return $image;
-                     })->rawColumns(['edit','delete','image'])->make(true);
-                     
+                     })->rawColumns(['edit','delete','image','status'])->make(true);   
             }
                     return view('user');
     }
+
     // function fetch_user(Request $request)
     // {
     //  if($request->ajax())
