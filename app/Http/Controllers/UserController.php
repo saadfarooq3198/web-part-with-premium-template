@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Jobs\QueJob;
+use App\Mail\WelcomeMail;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUser;
 use App\Http\Requests\UpdateUser;
@@ -9,6 +11,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\Facades\DataTables;
@@ -57,7 +60,7 @@ class UserController extends Controller
                         }
                    })
                     // end
-   
+                   
                     ->addColumn('edit', function($row){
                         $edit = '<td><button value="'.$row->id.'" class="btn-edit btn btn-primary btn-sm">Edit</button></td>
                         ';
@@ -74,24 +77,12 @@ class UserController extends Controller
                     return view('user');
     }
 
-    // function fetch_user(Request $request)
-    // {
-    //  if($request->ajax())
-    //  {
-    //     $users = DB::table('users')->paginate(3);
-    //      return view('user_chaild_pagination', compact('users'))->render();
-    //  }
-    // }
-
     public function search(Request $request)
     { 
         $users = User::where('first_name','LIKE','%'.$request->search.'%')
         ->orWhere('last_name','LIKE','%'.$request->search.'%')
         ->orWhere('email','LIKE','%'.$request->search.'%')->paginate(3);
         return view('user_chaild_pagination', compact('users'))->render();
-        // return response()->json([
-        //     'users'=>$users
-        // ]);
     }
 
     public function get_users(){
@@ -122,6 +113,7 @@ class UserController extends Controller
                 $user->first_name = $request->first_name;
                 $user->last_name = $request->last_name;
                 $user->email = $request->email;
+                $user->status = $request->status;
                 $file = $request->file('img');
                 if($file=='') {
                     $user->image='user.jpg';
@@ -132,6 +124,9 @@ class UserController extends Controller
                 }
                 $user->password=$request->password;
                 $user->save();
+         
+                $email_list['email'] = $request->email;
+                dispatch(new \App\Jobs\QueJob($email_list));
                 return response()->json([
                     'success'=>200,
                     'message'=>'User Added Successfully'
@@ -185,7 +180,8 @@ class UserController extends Controller
                  User::where('id',$id)->update([
                     'first_name'=>$request->first_name,
                     'last_name'=>$request->last_name,
-                    'email' => $request->email
+                    'email' => $request->email,
+                    'status' => $request->status
                     ]);
                     return response()->json([
                         'status'=>200,
@@ -226,9 +222,5 @@ class UserController extends Controller
                     'email' => $request->email
                     ]);
                     return redirect('users');
-                    // return response()->json([
-                    //     'status'=>200,
-                    //     'message'=>'successfully updated'
-                    // ]);
     }
 }

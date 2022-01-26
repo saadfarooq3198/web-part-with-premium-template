@@ -130,6 +130,19 @@
                   </div>
 
                   <div class="form-group">
+                    <label class="form-label" for="fw-nationality">Status</label>
+                    <div class="form-control-wrap ">
+                        <div class="form-control-select">
+                            <select class="form-control" id="fw-nationality" name="status">
+                                <option value="Active">Active</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                  <div class="form-group">
                       <label for="name">Image</label>
                       <input type="file" class="form-control" name="img" id="image">
                   </div>
@@ -179,6 +192,18 @@
                      <input type="email" class="form-control email" name="email" placeholder="Email" required>
                  </div>
                  <div class="form-group">
+                    <label class="form-label" for="fw-nationality">Status</label>
+                    <div class="form-control-wrap ">
+                        <div class="form-control-select">
+                            <select class="form-control" id="fw-nationality" name="status">
+                                <option value="Active">Active</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                 <div class="form-group">
                      <label for="name">Image</label>
                      <input type="file" class="form-control image-update" name="img">
                  </div>
@@ -219,7 +244,6 @@
 <!-- content @e -->
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script> --}}
 <script>
 $(document).ready(function(){
     // Fetch data using datatable start
@@ -293,7 +317,8 @@ $(document).ready(function(){
                         $('#add-user-modal').modal('hide');
                         toastr.success(response.message);
                         $('#add-user-form').find('input').val('');
-                        fetch_users();
+                        $('.data-table').DataTable().ajax.reload();
+                        // fetch_users();
                 },
                 error:function(request,status,error){
                     toastr.error(request.responseJSON.errors);
@@ -322,7 +347,8 @@ $(document).ready(function(){
                 success: function(response) {
                     $('#delete-modal').modal('hide');
                     toastr.success(response.message);
-                    fetch_users();
+                    // fetch_users();
+                    $('.data-table').DataTable().ajax.reload();
                 }
             });
         });
@@ -372,7 +398,8 @@ $(document).ready(function(){
                     $('#edit_user_modal').modal('hide');
                     toastr.success(response.message);
                     $('.edit_user_form').find('input').val('');
-                    fetch_users();
+                    $('.data-table').DataTable().ajax.reload();
+                    // fetch_users();
                 }
             });
         });
