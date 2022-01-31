@@ -1,3 +1,6 @@
+<head>
+    @toastr_css
+</head>
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
@@ -51,6 +54,33 @@
                     {{ __('Log in') }}
                 </x-button>
             </div>
+            <div class="flex items-center justify-end mt-5">
+                <a class="btn mt-3" href="{{ url('auth/facebook') }}"
+                style="background: blue; color: #ffffff; padding: 10px; width: 100%; text-align: center; display: block; border-radius:3px;">
+                Login with Facebook
+            </a>
+            </div>
+            <div class="flex items-center justify-end mt-4">
+                <a class="btn" href="{{ url('auth/github') }}"
+                style="background: #313131; color: #ffffff; padding: 10px; width: 100%; text-align: center; display: block; border-radius:3px;">
+                Login with GitHub
+            </a>
+            </div>
+            <div class="flex items-center justify-end mt-4">
+                <a class="btn" href="{{ url('auth/google') }}"
+                style="background: rgb(155, 81, 216); color: #ffffff; padding: 10px; width: 100%; text-align: center; display: block; border-radius:3px;">
+                Login with Google
+            </a>
+            </div>
+            <div class="flex items-center justify-end mt-4">
+                <a class="btn" href="{{ url('auth/linkedin') }}"
+                    style="background: #0E62BC; color: #ffffff; padding: 10px; width: 100%; text-align: center; display: block; border-radius:3px;">
+                    Login with Linkedin
+                </a>
+            </div>
         </form>
     </x-auth-card>
 </x-guest-layout>
+@jquery
+@toastr_js
+@toastr_render

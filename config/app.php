@@ -139,6 +139,7 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+        Laravel\Socialite\SocialiteServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yoeunes\Toastr\ToastrServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
@@ -193,6 +194,7 @@ return [
 
     'aliases' => [
 
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,

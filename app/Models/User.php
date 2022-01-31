@@ -19,9 +19,16 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
+        'image',
         'password',
+        'facebook_id',
+        'github_id',
+        'auth_type',
+        'google_id',
+        'linkedin_id'
     ];
 
     /**
@@ -32,6 +39,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_recovery_codes',
+        'two_factor_secret'
     ];
 
     /**
@@ -42,4 +51,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function addNew($input)
+    {
+        $check = static::where('facebook_id',$input['facebook_id'])->first();
+
+
+        if(is_null($check)){
+            return static::create($input);
+        }
+
+        return $check;
+    }
+    // protected $appends = [
+    //     'profile_photo_url'
+    // ];
 }

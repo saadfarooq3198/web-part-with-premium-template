@@ -7,9 +7,10 @@
                 </div>
                 <div class="nk-footer-links">
                     <ul class="nav nav-sm">
-                        <li class="nav-item"><a class="nav-link" href="#">Terms</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Privacy</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
+                        <span style="display: none">{{ $pages= App\Models\Page::all() }}</span>
+                        @foreach($pages as $page)
+                        <li class="nav-item"><a class="nav-link" href="{{route('page',$page->id)}}">{{$page->page_title}}</a></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>

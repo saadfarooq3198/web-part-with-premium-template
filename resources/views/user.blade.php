@@ -28,21 +28,6 @@
                                                 <div class="toggle-expand-content" data-content="pageMenu">
                                                     <ul class="nk-block-tools g-3">
                                                         <li>
-                                                            {{-- <div class="drodown" style="border: 1px solid red">
-                                                                <a href="#"
-                                                                    class="dropdown-toggle btn btn-white btn-dim btn-outline-light"
-                                                                    data-toggle="dropdown" aria-expanded="false"><em
-                                                                        class="d-none d-sm-inline icon ni ni-filter-alt"></em><span>Filter
-                                                                        By Status</span><em
-                                                                        class="dd-indc icon ni ni-chevron-right"></em></a>
-                                                                <div class="dropdown-menu dropdown-menu-right" style="">
-                                                                    <ul class="link-list-opt no-bdr">
-                                                                        <li><a at="active"><span   class="status">Active</span></a></li>
-                                                                        <li><a><span   class="status">Pending</span></a></li>
-                                                                        <li><a><span   class="status">Suspended</span></a></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div> --}}
                                                             <div class="form-group">
                                                                 <select id='status' class="form-control" style="width: 200px">
                                                                     <option value="">Status</option>
@@ -55,7 +40,7 @@
                                                         <li class="nk-block-tools-opt"><button class="btn btn-primary"
                                                                 data-toggle="modal" data-target="#add-user-modal"><em
                                                                     class="icon ni ni-plus"></em><span>Add
-                                                                    Project</span></button></li>
+                                                                    Users</span></button></li>
                                                     </ul>
                                                 </div>
                                             </div><!-- .toggle-wrap -->
@@ -149,7 +134,7 @@
 
                   <div class="form-group">
                       <label for="name">Password</label>
-                      <input type="password" class="form-control" name="password" id="password1"
+                      <input type="password" class="form-control"  autocomplete="current-password" name="password" id="password1"
                           placeholder="Password" required>
                          
                   </div>
@@ -209,7 +194,7 @@
                  </div>
                  <div class="form-group">
                      <label for="name">Password</label>
-                     <input type="password" class="form-control password2" name="password" placeholder="Password">
+                     <input type="password" class="form-control password2" autocomplete="current-password" name="password" placeholder="Password">
                  </div>
                  <button style="background: rgb(53, 53, 107)" type="submit"
                      class="btn btn-primary edit-save-btn">Save changes</button>
